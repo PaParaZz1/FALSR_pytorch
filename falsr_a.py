@@ -31,6 +31,9 @@ class FeatureExtractor(nn.Module):
         self.cell5_conv4 = nn.Conv2d(64, 64, 3, 1, 1, bias=bias)
 
         self.cell6_conv1 = nn.Conv2d(64, 64, 1, 1, 0, bias=bias)
+        self.cell6_conv2 = nn.Conv2d(64, 64, 1, 1, 0, bias=bias)
+        self.cell6_conv3 = nn.Conv2d(64, 64, 1, 1, 0, bias=bias)
+        self.cell6_conv4 = nn.Conv2d(64, 64, 1, 1, 0, bias=bias)
 
         self.cell7_conv1 = nn.Conv2d(64+64+48+in_channels, 64, 3, 1, 1, bias=bias)
         self.cell7_conv2 = nn.Conv2d(64, 64, 3, 1, 1, bias=bias)
@@ -84,6 +87,9 @@ class FeatureExtractor(nn.Module):
 
         # cell6
         x = self.act(self.cell6_conv1(x))
+        x = self.act(self.cell6_conv2(x))
+        x = self.act(self.cell6_conv3(x))
+        x = self.act(self.cell6_conv4(x))
         c6 = x
         x = torch.cat([x, c5, c2, c0], dim=1)
 
