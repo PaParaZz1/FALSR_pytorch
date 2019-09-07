@@ -116,8 +116,8 @@ class FALSRA(nn.Module):
         self.pixelshuffle = nn.PixelShuffle(2)
         self.y_conv2 = nn.Conv2d(8, 1, 3, 1, 1, bias=bias)
 
-        self.rgb2ypbpr = torch.FloatTensor([0.299, -0.147, 0.615, 0.587, -0.289, -0.515, 0.114, 0.436, 0.100]).view(3, 3)
-        self.ypbpr2rgb = torch.FloatTensor([1., 1., 1., 0., -0.394, 2.032, 1.140, -0.581, 0.]).view(3, 3)
+        self.rgb2ypbpr = torch.FloatTensor([0.299, -0.14713, 0.615, 0.587, -0.28886, -0.51499, 0.114, 0.436, -0.10001]).view(3, 3)
+        self.ypbpr2rgb = torch.FloatTensor([1., 1., 1., 0., -0.39465, 2.03211, 1.13983, -0.58060, 0.]).view(3, 3)
 
     def rgb2ypbpr_transform(self, x):
         rgb2ypbpr = self.rgb2ypbpr.to(x.device)
@@ -151,6 +151,13 @@ def test():
     output = model(data)
     print(output.shape)
 
+    #data = torch.ones(2, 3, 32, 32).cuda()
+    pbpr = model.rgb2ypbpr_transform(data)
+    rgb = model.ypbpr2rgb_transform(pbpr)
+    print("diff:", (data - rgb).abs().sum() / data.size().numel())
+    print("diff:", (data - rgb).abs().sum() / data.abs().sum())
+    print("diff:", ((data - rgb).abs() / (data.abs() + 1e-8) ).sum() / data.size().numel() )
+    print("diff:", ((data - rgb).abs() / (data.abs() + 1e-8) ).max())
 
 if __name__ == "__main__":
     test()
